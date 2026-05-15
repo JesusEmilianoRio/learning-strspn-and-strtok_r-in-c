@@ -30,11 +30,15 @@ size_t STRSPN_TEST(const char *str, const char *accept) {
 		p[*s++] = 1;
 	} while(*s);
 
+	//Why does it return 0,1,2,3?
+	//Loop unrolling. Never thought about it and its optimization. Damn.
 	s = (unsigned char *) str;
 	if (!p[s[0]]) return 0;
 	if (!p[s[1]]) return 1;
 	if (!p[s[2]]) return 2;
 	if (!p[s[3]]) return 3;
+
+
 }
 
 char* hello(char *restrict s, const char *restrict delim, char **restrict save_ptr) {
@@ -44,19 +48,10 @@ char* hello(char *restrict s, const char *restrict delim, char **restrict save_p
 } 
 int main(int argc, char *argv[])
 {	
-	char *accept = "aa";
-	unsigned char table[256];
-	unsigned char*p = memset(table, 0, 64);
-	memset(p + 64, 0, 64);
-	memset(p + 128, 0, 64);
-	memset(p + 192, 0, 64);
+	int arr[] = {10,0};
+	int *ptr = arr;
 
-	unsigned char *s = (unsigned char *) accept;
-
-	do {
-		printf("%c\n", *s);
-		p[*s++] = 1;
-	} while(*s);
+	if (!ptr[1]) printf("Hola mund\n");
 
 
 	return 0;
