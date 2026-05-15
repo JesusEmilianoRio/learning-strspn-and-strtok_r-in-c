@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/cdefs.h>
-
+#define PTR_ALIGN(p, a)		((typeof(p))ALIGN((unsigned long)(p), (a)))
+#define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
 //strspn
 size_t STRSPN_TEST(const char *str, const char *accept) {
 	//Only accepts chars; not null.
@@ -38,6 +39,7 @@ size_t STRSPN_TEST(const char *str, const char *accept) {
 	if (!p[s[2]]) return 2;
 	if (!p[s[3]]) return 3;
 
+	s = (unsigned char *) PTR_ALIGN_DOWN(s, 4);
 
 }
 
@@ -48,11 +50,12 @@ char* hello(char *restrict s, const char *restrict delim, char **restrict save_p
 } 
 int main(int argc, char *argv[])
 {	
-	int arr[] = {10,0};
-	int *ptr = arr;
-
-	if (!ptr[1]) printf("Hola mund\n");
-
-
+	struct Example {
+		char *a;
+		int b;
+		char c;
+	};
+	struct Example ex = {0};
+	printf("%zu\n", sizeof(ex));
 	return 0;
 }
