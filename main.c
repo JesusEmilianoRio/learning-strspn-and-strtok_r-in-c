@@ -3,6 +3,9 @@
 #include <string.h>
 #include <sys/cdefs.h>
 
+#define PTR_ALIGN_DOWN(base, size) \
+  ((__typeof__ (base)) ((uintptr_t) (base) & ~((uintptr_t) (size) - 1)))
+
 //strspn
 size_t STRSPN_TEST(const char *str, const char *accept) {
 	//Only accepts chars; not null.
@@ -38,7 +41,7 @@ size_t STRSPN_TEST(const char *str, const char *accept) {
 	if (!p[s[2]]) return 2;
 	if (!p[s[3]]) return 3;
 
-//	s = (unsigned char *) PTR_ALIGN_DOWN(s, 4);
+	s = (unsigned char *) PTR_ALIGN_DOWN(s, 4);
 
 	unsigned int c0, c1, c2, c3;
 	do {
@@ -50,6 +53,9 @@ size_t STRSPN_TEST(const char *str, const char *accept) {
 		c3 = p[s[3]];
 	} while ((c0 & c1 & c2 & c3) != 0);
 
+	size_t count = s - (unsigned char *) str;
+  	return (c0 & c1) == 0 ? count + c0 : count + c2 + 2;
+
 }
 
 char* hello(char *restrict s, const char *restrict delim, char **restrict save_ptr) {
@@ -57,8 +63,11 @@ char* hello(char *restrict s, const char *restrict delim, char **restrict save_p
 	char *end = &c;
 	return NULL;
 } 
+
+//Empiece 10:17 am termino 11:43 am 
 int main(int argc, char *argv[])
 {	
-
+	char *requestLine = "GET / HTTP/1.1\r\n";
+	
 	return 0;
 }
