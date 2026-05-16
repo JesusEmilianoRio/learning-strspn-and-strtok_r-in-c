@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/cdefs.h>
-#define PTR_ALIGN(p, a)		((typeof(p))ALIGN((unsigned long)(p), (a)))
-#define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
+
 //strspn
 size_t STRSPN_TEST(const char *str, const char *accept) {
 	//Only accepts chars; not null.
@@ -33,13 +32,23 @@ size_t STRSPN_TEST(const char *str, const char *accept) {
 
 	//Why does it return 0,1,2,3?
 	//Loop unrolling. Never thought about it and its optimization. Damn.
-	s = (unsigned char *) str;
+	s =  (unsigned char *) str;
 	if (!p[s[0]]) return 0;
 	if (!p[s[1]]) return 1;
 	if (!p[s[2]]) return 2;
 	if (!p[s[3]]) return 3;
 
-	s = (unsigned char *) PTR_ALIGN_DOWN(s, 4);
+//	s = (unsigned char *) PTR_ALIGN_DOWN(s, 4);
+
+	unsigned int c0, c1, c2, c3;
+	do {
+		//Loop unrolling
+		s += 4;
+		c0 = p[s[0]];
+		c1 = p[s[1]];
+		c2 = p[s[2]];
+		c3 = p[s[3]];
+	} while ((c0 & c1 & c2 & c3) != 0);
 
 }
 
@@ -50,12 +59,6 @@ char* hello(char *restrict s, const char *restrict delim, char **restrict save_p
 } 
 int main(int argc, char *argv[])
 {	
-	struct Example {
-		char *a;
-		int b;
-		char c;
-	};
-	struct Example ex = {0};
-	printf("%zu\n", sizeof(ex));
+
 	return 0;
 }
